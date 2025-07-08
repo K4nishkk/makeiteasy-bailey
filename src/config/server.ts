@@ -19,7 +19,7 @@ export default function startServer() {
         try {
             const items = req.body;
 
-            if (!Array.isArray(items) || items.length === 0) {
+            if (!Array.isArray(items)) {
                 res.status(400).json({ error: 'Invalid items format' });
                 return
             }
