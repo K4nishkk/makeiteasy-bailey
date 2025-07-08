@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors'
 import logger from '../utils/logger.js';
-import { getItems, saveItems } from './mongodb.js';
+import { getItems, modifyItems } from './mongodb.js';
 
 import { fileURLToPath } from 'url';
 
@@ -24,7 +24,7 @@ export default function startServer() {
                 return
             }
 
-            await saveItems(items);
+            await modifyItems(items, true);
 
             res.status(200).json({ message: 'Items saved successfully' });
         } catch (err) {

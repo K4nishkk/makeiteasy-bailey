@@ -40,10 +40,10 @@ const getItemsCollection = async () => {
   return collection
 }
 
-export async function saveItems(items: Item[]): Promise<void> {
+export async function modifyItems(items: Item[], replace: boolean = false): Promise<void> {
   const collection = await getItemsCollection();
   const existing = await getItems() || {};
-  const merged = concatItems(existing, items);
+  const merged = replace ? items : concatItems(existing, items);
 
   await collection.updateOne(
     { _id: ITEMS_DOC_ID},

@@ -2,7 +2,7 @@ import { makeWASocket, DisconnectReason } from '@whiskeysockets/baileys';
 import qrcode from 'qrcode-terminal';
 import { useMongoAuthState } from '../utils/useMongoAuthState.js';
 import { extractItems } from '../utils/extractItems.js';
-import { saveItems } from './mongodb.js';
+import { modifyItems } from './mongodb.js';
 import { Boom } from '@hapi/boom'
 import logger from '../utils/logger.js';
 
@@ -43,7 +43,7 @@ export default async function startSock() {
             const fromMe = messages[0]?.key?.fromMe
             if (remoteJid == process.env.JID && !fromMe) {
                 const items = extractItems(chat)
-                await saveItems(items);
+                await modifyItems(items);
             }
         }
     });
