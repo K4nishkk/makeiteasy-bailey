@@ -26,12 +26,20 @@ export default async function startSock() {
         if (connection === 'open') {
             logger.info('Connected to WhatsApp!');
         } else if (connection === 'close') {
-            logger.info('Connection closed.');
-            const shouldReconnect = (lastDisconnect?.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut
-            logger.info('connection closed due to ', lastDisconnect?.error, ', reconnecting ', shouldReconnect)
-            if (shouldReconnect) {
-                startSock();
+            logger.error('Connection closed due to ', lastDisconnect?.error)
+
+            const errorCode = (lastDisconnect?.error as Boom)?.output?.statusCode
+
+            if (errorCode == DisconnectReason.connectionReplaced) {
+                logger.warn("Multiple whatsapp instances trying to connect")
+                const waitingTime = 1000 * 60 * 2
+                setTimeout(() => startSock(), waitingTime);
             }
+            else if (errorCode !== DisconnectReason.loggedOut) {
+                logger.warn("Trying to reconnect in 5s")
+                setTimeout(() => startSock(), 5000);
+            }
+            logger.warn("Whatsapp instance logged out")
         }
     });
 
@@ -52,6 +60,6 @@ export default async function startSock() {
         const isConnected = sock.ws.isOpen
         return { isConnected }
     }
-    
+
     return getSocketStatus
 };
