@@ -1,6 +1,6 @@
-import { createLogger, format, transports } from "winston";
+import { createLogger, format, Logger, transports } from "winston";
 
-const logger = createLogger({
+const logger: Logger = createLogger({
     level: "info",
     format: format.combine(
         format.timestamp(),

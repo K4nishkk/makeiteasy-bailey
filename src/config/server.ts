@@ -20,7 +20,8 @@ export default function startServer() {
             const items = req.body;
 
             if (!Array.isArray(items) || items.length === 0) {
-            return res.status(400).json({ error: 'Invalid items format' });
+                res.status(400).json({ error: 'Invalid items format' });
+                return
             }
 
             await saveItems(items);
@@ -37,6 +38,8 @@ export default function startServer() {
     app.listen(PORT, () => {
         logger.info(`Server listening on port ${PORT}`);
     });
+
+    return app;
 }
 
 const __filename = fileURLToPath(import.meta.url);

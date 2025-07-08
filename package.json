@@ -1,11 +1,12 @@
 {
   "name": "makeiteasy_backend",
   "version": "1.0.0",
-  "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "node src/config/server.js"
+    "dev": "cross-env NODE_OPTIONS=--loader=ts-node/esm nodemon src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "server": "cross-env NODE_OPTIONS=--loader=ts-node/esm nodemon src/config/server.ts"
   },
   "keywords": [],
   "author": "",
@@ -20,5 +21,16 @@
     "mongodb": "^6.17.0",
     "qrcode-terminal": "^0.12.0",
     "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/lodash": "^4.17.20",
+    "@types/node": "^24.0.10",
+    "@types/qrcode-terminal": "^0.12.2",
+    "cross-env": "^7.0.3",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
   }
 }

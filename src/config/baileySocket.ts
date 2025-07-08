@@ -1,8 +1,10 @@
-import { makeWASocket } from '@whiskeysockets/baileys';
+import { makeWASocket, DisconnectReason } from '@whiskeysockets/baileys';
 import qrcode from 'qrcode-terminal';
 import { useMongoAuthState } from '../utils/useMongoAuthState.js';
 import { extractItems } from '../utils/extractItems.js';
 import { saveItems } from './mongodb.js';
+import { Boom } from '@hapi/boom'
+import logger from '../utils/logger.js';
 
 export default async function startSock() {
     const { state, saveCreds } = await useMongoAuthState('auth');
@@ -11,21 +13,25 @@ export default async function startSock() {
         auth: await state()
     });
 
-    sock.ev.on('creds.update', saveCreds);
+    sock.ev.on('creds.update', () => saveCreds);
 
     sock.ev.on('connection.update', (update) => {
-        const { connection, qr } = update;
+        const { connection, qr, lastDisconnect } = update;
 
         if (qr) {
-            console.log("Scan this QR code with your phone:");
+            logger.info("Scan this QR code with your phone:");
             qrcode.generate(qr, { small: true });
         }
 
         if (connection === 'open') {
-            console.log('Connected to WhatsApp!');
+            logger.info('Connected to WhatsApp!');
         } else if (connection === 'close') {
-            console.log('Connection closed. Reconnecting...');
-            startSock();
+            logger.info('Connection closed.');
+            const shouldReconnect = (lastDisconnect?.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut
+            logger.info('connection closed due to ', lastDisconnect?.error, ', reconnecting ', shouldReconnect)
+            if (shouldReconnect) {
+                startSock();
+            }
         }
     });
 
@@ -41,4 +47,11 @@ export default async function startSock() {
             }
         }
     });
+
+    function getSocketStatus() {
+        const isConnected = sock.ws.isOpen
+        return { isConnected }
+    }
+    
+    return getSocketStatus
 };
