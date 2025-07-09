@@ -12,7 +12,7 @@ type ExcelEntry = {
 
 const serviceAccountAuth = new JWT({
   email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL as string,
-  key: process.env.GOOGLE_PRIVATE_KEY as string,
+  key: (process.env.GOOGLE_PRIVATE_KEY as string).split(String.raw`\n`).join('\n'),
   scopes: ['https://www.googleapis.com/auth/spreadsheets'],
 });
 
