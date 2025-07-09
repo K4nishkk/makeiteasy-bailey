@@ -6,7 +6,8 @@
     "dev": "cross-env NODE_OPTIONS=--loader=ts-node/esm nodemon src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "server": "cross-env NODE_OPTIONS=--loader=ts-node/esm nodemon src/config/server.ts"
+    "server": "cross-env NODE_OPTIONS=--loader=ts-node/esm nodemon src/config/server.ts",
+    "sheets": "cross-env NODE_OPTIONS=--loader=ts-node/esm nodemon src/config/googleSheets.ts"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +18,8 @@
     "cors": "^2.8.5",
     "dotenv": "^17.0.1",
     "express": "^5.1.0",
+    "google-auth-library": "^9.15.1",
+    "google-spreadsheet": "^4.1.4",
     "lodash": "^4.17.21",
     "mongodb": "^6.17.0",
     "qrcode-terminal": "^0.12.0",

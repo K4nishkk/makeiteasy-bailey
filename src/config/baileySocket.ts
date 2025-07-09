@@ -5,6 +5,8 @@ import { extractItems } from '../utils/extractItems.js';
 import { modifyItems } from './mongodb.js';
 import { Boom } from '@hapi/boom'
 import logger from '../utils/logger.js';
+import { insertInExcel } from './googleSheets.js';
+import { getCurrDate } from '../utils/currDate.js';
 
 export default async function startSock() {
     const { state, saveCreds } = await useMongoAuthState('auth');
@@ -52,6 +54,11 @@ export default async function startSock() {
             if (remoteJid == process.env.JID && !fromMe) {
                 const items = extractItems(chat)
                 await modifyItems(items);
+
+                await insertInExcel({
+                    date: getCurrDate(),
+                    items: items
+                })
             }
         }
     });

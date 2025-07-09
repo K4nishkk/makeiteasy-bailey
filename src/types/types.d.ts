@@ -1,4 +1,4 @@
 export type Item = {
-    itemName: string,
-    itemValue: string
+    name: string,
+    quantity: string
 }

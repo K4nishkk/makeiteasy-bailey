@@ -10,8 +10,8 @@ export function extractItems(chat: string): Item[] {
             const match = line.match(/^(.+?)\s+(.*)$/);
             if (match) {
                 return {
-                    itemValue: match[1].trim(),
-                    itemName: match[2].trim()
+                    quantity: match[1].trim(),
+                    name: match[2].trim()
                 };
             }
             return null;
@@ -27,16 +27,16 @@ export function concatItems(existing: Item[], newItems: Item[]): Item[] {
     }
 
     const merged = structuredClone(existing);
-    const existingItemNames: string[] = existing.map(item => item.itemName)
+    const existingItemNames: string[] = existing.map(item => item.name)
 
     for (const newItem of newItems) {
-        const index = existingItemNames.indexOf(newItem.itemName)
+        const index = existingItemNames.indexOf(newItem.name)
         if (index != -1) {
-            if (isNumeric(merged[index].itemValue) && isNumeric(newItem.itemValue)) {
-                merged[index].itemValue = (parseInt(merged[index].itemValue) + parseInt(newItem.itemValue)).toString()
+            if (isNumeric(merged[index].quantity) && isNumeric(newItem.quantity)) {
+                merged[index].quantity = (parseInt(merged[index].quantity) + parseInt(newItem.quantity)).toString()
             }
             else {
-                merged[index].itemValue = merged[index].itemValue + " + " + newItem.itemValue;
+                merged[index].quantity = merged[index].quantity + " + " + newItem.quantity;
             }
         }
         else {
